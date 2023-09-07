@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProductController;use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -24,5 +24,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/check-login', [AuthController::class, 'checkLogin']);
+    Route::post('/', [ProductController::class, 'create']);
+});
+
+Route::group(['prefix' => 'products'], function () {
+    Route::get('/',  [ProductController::class, 'index']);
+    Route::post('/', [ProductController::class, 'create']);
+    Route::get('/{_id}', [ProductController::class, 'show']);
+    Route::put('/{product}', [ProductController::class, 'update']);
+    Route::delete('/{product}', [ProductController::class, 'delete']);
 });
 
