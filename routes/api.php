@@ -42,6 +42,6 @@ Route::group(['prefix' => 'orders'], function () {
     Route::post('/', [OrderController::class, 'create']);
     Route::get('/{order}', [OrderController::class, 'show']);
     Route::put('/{order}', [OrderController::class, 'update']);
-    Route::delete('/{order}', [OrderController::class, 'delete']);
+    Route::put('/{order}/cancel', [OrderController::class, 'cancel']);
 });
 
