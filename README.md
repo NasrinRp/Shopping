@@ -1,6 +1,4 @@
 # Online Order
-## Begin
-On the MongoDB configuration I see a reference from [Jens Sagers](https://github.com/jenssegers/laravel-mongodb).
 
 ## Usage
 
