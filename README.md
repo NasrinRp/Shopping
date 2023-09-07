@@ -10,7 +10,6 @@ On the MongoDB configuration I see a reference from [Jens Sagers](https://github
 -   `php artisan migrate`
 
 ## Set Env
-you can see on .env.example
 set 
 DB_CONNECTION=mongodb and 
 DB_DATABASE=you_db_name
