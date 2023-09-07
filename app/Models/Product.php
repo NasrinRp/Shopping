@@ -12,6 +12,8 @@ class Product extends Model
     use HasFactory,
         SoftDeletes;
 
+    protected $connection = "mongodb";
+
     protected $collection = 'product';
 
     protected $fillable = [

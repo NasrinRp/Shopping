@@ -13,6 +13,8 @@ class Order extends Model
     use HasFactory,
         SoftDeletes;
 
+    protected $connection = "mongodb";
+
     protected $collection = 'order';
 
     protected $fillable = [

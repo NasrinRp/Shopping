@@ -12,6 +12,8 @@ class OrderItem extends Model
     use HasFactory,
         SoftDeletes;
 
+    protected $connection = "mongodb";
+
     protected $fillable = [
         'product_id',
         'order_id',
