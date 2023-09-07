@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProductController;use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +32,16 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 Route::group(['prefix' => 'products'], function () {
     Route::get('/',  [ProductController::class, 'index']);
     Route::post('/', [ProductController::class, 'create']);
-    Route::get('/{_id}', [ProductController::class, 'show']);
+    Route::get('/{product}', [ProductController::class, 'show']);
     Route::put('/{product}', [ProductController::class, 'update']);
     Route::delete('/{product}', [ProductController::class, 'delete']);
+});
+
+Route::group(['prefix' => 'orders'], function () {
+    Route::get('/',  [OrderController::class, 'index']);
+    Route::post('/', [OrderController::class, 'create']);
+    Route::get('/{order}', [OrderController::class, 'show']);
+    Route::put('/{order}', [OrderController::class, 'update']);
+    Route::delete('/{order}', [OrderController::class, 'delete']);
 });
 

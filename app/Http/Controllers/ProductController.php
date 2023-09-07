@@ -13,7 +13,8 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
+    public function index()
+    {
         $products = Product::all();
         return response()->json(array("data"=> $products), 200);
     }
@@ -22,8 +23,8 @@ class ProductController extends Controller
         try{
             $this->validate($request, [
                 'name' => 'required',
-                'price' => 'numeric',
-                'inventory' => 'numeric'
+                'price' => 'required|numeric',
+                'inventory' => 'required|numeric'
             ]);
             $data = Product::query()->create($request->all());
             if($data){
@@ -34,9 +35,12 @@ class ProductController extends Controller
         }
     }
 
-    public function show($_id){
-        $product = Product::findOrFail($_id);
-        return response()->json(array("data"=> $product), 200);
+    public function show(Product $product){
+        try{
+            return response()->json(array("data"=> $product), 200);
+        }catch(ModelNotFoundException $e){
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     public function update(Request $request, Product $product){

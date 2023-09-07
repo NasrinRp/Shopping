@@ -14,6 +14,8 @@ class OrderItem extends Model
 
     protected $connection = "mongodb";
 
+    protected $collection = 'order_item';
+
     protected $fillable = [
         'product_id',
         'order_id',
