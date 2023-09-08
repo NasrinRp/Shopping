@@ -28,7 +28,7 @@ class ProductController extends Controller
             ]);
             $data = Product::query()->create($request->all());
             if($data){
-                return response()->json(array("message"=> "Success Create Item"), 201);
+                return response()->json($data, 200);
             }
         }catch(\Exception $e){
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
@@ -47,7 +47,7 @@ class ProductController extends Controller
         try{
             $updated = $product->update($request->all());
             if($updated){
-                return response()->json(array("message"=> "Success Update Item"), 200);
+                return response()->json($product, 200);
             }
         }catch(ModelNotFoundException $e){
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
