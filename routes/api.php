@@ -26,7 +26,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/check-login', [AuthController::class, 'checkLogin']);
-    Route::post('/', [ProductController::class, 'create']);
 });
 
 Route::group(['prefix' => 'products'], function () {
