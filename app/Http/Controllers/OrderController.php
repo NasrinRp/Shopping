@@ -117,10 +117,12 @@ class OrderController extends Controller
                     }
                 }
             }
-            $order->update([
+            $updated = $order->update([
                 'total_price' => $totalPrice
             ]);
-            return response()->json($order->load(['user', 'orderItems']), 200);
+            if ($updated) {
+                return response()->json($order->load(['user', 'orderItems']), 200);
+            }
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 400);
         }

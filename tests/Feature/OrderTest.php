@@ -77,21 +77,56 @@ class OrderTest extends TestCase
         $this->assertDatabaseHas(OrderItem::class, $items[1]);
     }
 
-//    public function test_update()
-//    {
-//        $this->withExceptionHandling();
-//
-//        $user = User::query()->first();
-//        Sanctum::actingAs($user);
-//
-//        $product = Product::query()->first();
-//        $input = [
-//            '_id' => $product->_id,
-//            'name' => 'newProduct',
-//        ];
-//        $response = $this->put('/api/products/' . $product->_id, $input);
-//        $response->assertOk();
-//    }
+    public function test_update()
+    {
+        $this->withExceptionHandling();
+
+        $user = User::query()->first();
+        Sanctum::actingAs($user);
+
+        $order = Order::query()->first();
+        $orderItem = $order->orderItems()->first();
+
+        // Add one more to one of products in order
+        $newOrderItem = [
+            '_id' => $orderItem->_id,
+            'order_id' => $order->_id,
+            'count' => $orderItem->count + 1
+        ];
+        $input = [
+            'orderItems' => [
+                'upsert' => [$newOrderItem]
+            ]
+        ];
+        $productTest = [
+            '_id' => $orderItem->product_id,
+            'inventory' => $orderItem->product->inventory - 1
+        ];
+        $orderTest = [
+            '_id' => $order->_id,
+            'total_price' => $order->total_price + $orderItem->product->price
+        ];
+        $response = $this->put('/api/orders/' . $order->_id, $input);
+        $response->assertOk();
+        $this->assertDatabaseHas(OrderItem::class, $newOrderItem);
+        $this->assertDatabaseHas(Order::class, $orderTest);
+        $this->assertDatabaseHas(Product::class, $productTest);
+
+        // Delete one of products of order
+        $input = [
+            'orderItems' => [
+                'delete' => [$orderItem->_id]
+            ]
+        ];
+        $productTest = [
+            '_id' => $orderItem->product_id,
+            'inventory' => $orderItem->product->inventory + $orderItem->count
+        ];
+        $response = $this->put('/api/orders/' . $order->_id, $input);
+        $response->assertOk();
+        $this->assertSoftDeleted(OrderItem::class, ['_id' => $orderItem->_id]);
+        $this->assertDatabaseHas(Product::class, $productTest);
+    }
 
     public function test_cancel()
     {
@@ -104,12 +139,12 @@ class OrderTest extends TestCase
         $productCounts = [];
         foreach ($order->orderItems as $orderItem) {
             array_push($productCounts, [
-              '_id' => $orderItem->product_id,
-              'inventory' => $orderItem->product->inventory + $orderItem->count
+                '_id' => $orderItem->product_id,
+                'inventory' => $orderItem->product->inventory + $orderItem->count
             ]);
         }
         $orderItemIds = $order->orderItems->pluck('_id');
-        $this->put('api/orders/'. $order->_id . '/cancel')
+        $this->put('api/orders/' . $order->_id . '/cancel')
             ->assertOk();
         $this->assertSoftDeleted(Order::class, ['_id' => $order->_id]);
         foreach ($orderItemIds as $_id) {
